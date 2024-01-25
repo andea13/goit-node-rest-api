@@ -3,6 +3,7 @@ import path from "path";
 import { nanoid } from "nanoid";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+// import { assert, func } from "joi";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -39,4 +40,18 @@ export async function addContact(name, email, phone) {
   const updatedJson = JSON.stringify(contacts, null, 2);
   await fs.writeFile(contactsPath, updatedJson, "utf-8");
   return newContact;
+}
+
+export async function updateContactByID(contactId, dataToUpdate) {
+  const contacts = await listContacts();
+  const index = contacts.findIndex((contact) => contact.id === contactId);
+
+  if (index === -1) {
+    return null;
+  }
+
+  const updatedContact = { ...contacts[index], ...dataToUpdate };
+  contacts[index] = updatedContact;
+  await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+  return updatedContact;
 }

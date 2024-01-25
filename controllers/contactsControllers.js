@@ -3,6 +3,7 @@ import {
   addContact,
   getContactById,
   removeContact,
+  updateContactByID,
 } from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 
@@ -32,9 +33,12 @@ export const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await removeContact(id);
+    console.log(result);
     if (!result) {
       throw HttpError(404, "Not found");
     }
+
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -50,4 +54,16 @@ export const createContact = async (req, res, next) => {
   }
 };
 
-export const updateContact = (req, res) => {};
+export const updateContact = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const result = await updateContactByID(id, req.body);
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
