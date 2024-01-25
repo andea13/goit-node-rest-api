@@ -33,7 +33,6 @@ export const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
     const result = await removeContact(id);
-    console.log(result);
     if (!result) {
       throw HttpError(404, "Not found");
     }
