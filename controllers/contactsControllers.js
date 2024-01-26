@@ -6,11 +6,6 @@ import {
   updateContactByID,
 } from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
-import validateBody from "../helpers/validateBody.js";
-import {
-  createContactSchema,
-  updateContactSchema,
-} from "../schemas/contactsSchemas.js";
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -62,24 +57,11 @@ export const createContact = async (req, res, next) => {
 export const updateContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    // const { error } = validateBody.updateContactSchema(req.body);
-    // console.log(error);
-    // if (error) {
-    //   if (error instanceof Joi.ValidationError) {
-    //     error = new Error("Body must have at least one field");
-    //   }
-    //   return next(error);
-    // }
-
     const result = await updateContactByID(id, req.body);
-    const { name, email, phone } = req.body;
-    if (!name && !email && !phone) {
-      throw HttpError(400, "Body must have at least one field");
-    }
+
     if (!result) {
       throw HttpError(404, "Not found");
     }
-
     res.json(result);
   } catch (error) {
     next(error);
