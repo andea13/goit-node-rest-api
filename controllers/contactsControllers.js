@@ -75,8 +75,12 @@ export const updateStatusContact = async (req, res, next) => {
       new: true,
     });
 
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+
     res.json(result);
   } catch (error) {
-    next(HttpError(404, "Not found"));
+    next(error);
   }
 };
