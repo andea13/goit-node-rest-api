@@ -31,4 +31,20 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
+const registrationUserSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
+
+const loginSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
+
+export const schemas = {
+  registrationUserSchema,
+  loginSchema,
+};
+
 export const User = model("user", userSchema);
