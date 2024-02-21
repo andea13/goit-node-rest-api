@@ -39,14 +39,14 @@ const registrationUserSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-const loginSchema = Joi.object({
+const loginUserSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
 });
 
 export const schemas = {
   registrationUserSchema,
-  loginSchema,
+  loginUserSchema,
 };
 
 export const User = model("user", userSchema);
