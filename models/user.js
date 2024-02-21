@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import Joi, { version } from "joi";
+import Joi from "joi";
 
 // const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
