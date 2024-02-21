@@ -28,11 +28,13 @@ const userSchema = new Schema(
       ref: "user",
     },
   },
-  { versionKey: false, timestamps: true }
+  {
+    versionKey: false,
+    timestamps: true,
+  }
 );
 
 const registrationUserSchema = Joi.object({
-  name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
 });
