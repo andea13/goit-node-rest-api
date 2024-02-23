@@ -3,7 +3,8 @@ import { Contact } from "../models/contact.js";
 
 export const getAllContacts = async (req, res, next) => {
   try {
-    const result = await Contact.find();
+    const { _id: owner } = req.user;
+    const result = await Contact.find({ owner }, "-createdAt -updatedAt");
     res.json(result);
   } catch (error) {
     next(error);
@@ -39,9 +40,11 @@ export const deleteContact = async (req, res, next) => {
 };
 
 export const createContact = async (req, res, next) => {
+  console.log("req.user", req.user);
   try {
+    const { _id: owner } = req.user;
     const { name, email, phone } = req.body;
-    const result = await Contact.create({ name, email, phone });
+    const result = await Contact.create({ name, email, phone, owner });
     res.status(201).json(result);
   } catch (error) {
     next(error);
