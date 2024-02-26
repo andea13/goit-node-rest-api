@@ -6,6 +6,7 @@ import {
   login,
   getCurrentUser,
   logout,
+  updateSubscriptionStatus,
 } from "../controllers/auth.js";
 import authenticate from "../middlewares/authenticate.js";
 
@@ -29,5 +30,14 @@ router.get("/current", authenticate, getCurrentUser);
 //logout
 
 router.post("/logout", authenticate, logout);
+
+//updateSubscription
+
+router.patch(
+  "/:_id/subscription",
+  authenticate,
+  validateBody(schemas.updateSubscriptionStatusSchema),
+  updateSubscriptionStatus
+);
 
 export default router;

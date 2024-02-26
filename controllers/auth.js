@@ -83,3 +83,21 @@ export const getCurrentUser = async (req, res, next) => {
     next(err);
   }
 };
+
+export const updateSubscriptionStatus = async (req, res, next) => {
+  try {
+    const userId = req.params._id;
+
+    const result = await User.findByIdAndUpdate(userId, req.body, {
+      new: true,
+    });
+
+    if (!result) {
+      throw HttpError(404, "Not found");
+    }
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
