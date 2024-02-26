@@ -71,10 +71,12 @@ export const login = async (req, res, next) => {
 export const logout = async (req, res, next) => {
   const { _id } = req.user;
   await User.findByIdAndUpdate({ _id, token: "" });
+  res.status(204).json();
 };
 
 export const getCurrentUser = async (req, res, next) => {
   try {
+    console.log("req.user", req.user);
     const { email, subscription } = req.user;
     res.json({ email, subscription });
   } catch (err) {
