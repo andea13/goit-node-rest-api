@@ -72,7 +72,6 @@ export const deleteContact = async (req, res, next) => {
 };
 
 export const createContact = async (req, res, next) => {
-  console.log("req.user", req.user);
   try {
     const { _id: owner } = req.user;
     const { name, email, phone } = req.body;

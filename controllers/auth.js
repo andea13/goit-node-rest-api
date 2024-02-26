@@ -62,7 +62,6 @@ export const login = async (req, res, next) => {
     });
 
     const { id } = jwt.verify(token, SECRET_KEY);
-    console.log(id);
   } catch (err) {
     next(err);
   }
@@ -76,7 +75,6 @@ export const logout = async (req, res, next) => {
 
 export const getCurrentUser = async (req, res, next) => {
   try {
-    console.log("req.user", req.user);
     const { email, subscription } = req.user;
     res.json({ email, subscription });
   } catch (err) {
