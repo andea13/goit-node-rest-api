@@ -30,19 +30,6 @@ export const getAllContacts = async (req, res, next) => {
   }
 };
 
-// export const getFavoriteContacts = async (req, res, next) => {
-//   try {
-//     const { _id: owner } = req.user;
-//     const result = await Contact.find(
-//       { owner, favorite: true },
-//       "-createdAt -updatedAt"
-//     );
-//     res.json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;

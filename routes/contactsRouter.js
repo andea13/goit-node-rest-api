@@ -6,7 +6,6 @@ import {
   createContact,
   updateContact,
   updateStatusContact,
-  // getFavoriteContacts,
 } from "../controllers/contactsControllers.js";
 import { schemas } from "../models/contact.js";
 import validateBody from "../helpers/validateBody.js";
@@ -16,7 +15,6 @@ import authenticate from "../middlewares/authenticate.js";
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", authenticate, getAllContacts);
-// contactsRouter.get("/favorite", authenticate, getFavoriteContacts);
 
 contactsRouter.get("/:id", authenticate, isValiId, getOneContact);
 
@@ -39,6 +37,7 @@ contactsRouter.put(
 contactsRouter.patch(
   "/:contactId/favorite",
   authenticate,
+  isValiId,
   validateBody(schemas.updateFavoriteSchema),
   updateStatusContact
 );
