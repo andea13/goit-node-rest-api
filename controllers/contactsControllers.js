@@ -32,8 +32,13 @@ export const getAllContacts = async (req, res, next) => {
 
 export const getOneContact = async (req, res, next) => {
   try {
+    const { _id: owner } = req.user;
     const { id } = req.params;
-    const result = await Contact.findOne({ _id: id });
+
+    const result = await Contact.findOne(
+      { _id: id, owner },
+      "-createdAt -updatedAt"
+    );
     if (!result) {
       throw HttpError(404, "Not found");
     }
@@ -45,8 +50,19 @@ export const getOneContact = async (req, res, next) => {
 
 export const deleteContact = async (req, res, next) => {
   try {
+    const { _id: owner } = req.user;
     const { id } = req.params;
-    const result = await Contact.findByIdAndDelete({ _id: id });
+
+    const contact = await Contact.findById(id);
+    if (!contact) {
+      throw HttpError(404, "Not found");
+    }
+
+    if (contact.owner.toString() !== owner.toString()) {
+      throw HttpError(403, "Forbidden");
+    }
+
+    const result = await Contact.findByIdAndDelete(id, "-createdAt -updatedAt");
 
     if (!result) {
       throw HttpError(404, "Not found");
@@ -62,7 +78,10 @@ export const createContact = async (req, res, next) => {
   try {
     const { _id: owner } = req.user;
     const { name, email, phone } = req.body;
-    const result = await Contact.create({ name, email, phone, owner });
+    const result = await Contact.create(
+      { name, email, phone, owner },
+      "-createdAt -updatedAt"
+    );
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -71,8 +90,16 @@ export const createContact = async (req, res, next) => {
 
 export const updateContact = async (req, res, next) => {
   try {
+    const { _id: owner } = req.user;
     const { id } = req.params;
-    const result = await Contact.findByIdAndUpdate(id, req.body, { new: true });
+    const contact = await Contact.findById(id);
+    if (!contact) {
+      throw HttpError(404, "Not found");
+    }
+
+    if (contact.owner.toString() !== owner.toString()) {
+      throw HttpError(403, "Forbidden");
+    }
 
     const { name, email, phone } = req.body;
 
@@ -83,18 +110,44 @@ export const updateContact = async (req, res, next) => {
     if (!result) {
       throw HttpError(404, "Not found");
     }
+
+    const result = await Contact.findByIdAndUpdate(
+      id,
+      req.body,
+      {
+        new: true,
+      },
+      "-createdAt -updatedAt"
+    );
+
     res.json(result);
   } catch (error) {
     next(error);
   }
 };
 
-export const updateStatusContact = async (req, res, next) => {
+export const updateContactStatus = async (req, res, next) => {
   try {
+    const { _id: owner } = req.user;
     const { contactId } = req.params;
-    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
-      new: true,
-    });
+
+    const contact = await Contact.findById(contactId);
+    if (!contact) {
+      throw HttpError(404, "Not found");
+    }
+
+    if (contact.owner.toString() !== owner.toString()) {
+      throw HttpError(403, "Forbidden");
+    }
+
+    const result = await Contact.findByIdAndUpdate(
+      contactId,
+      req.body,
+      {
+        new: true,
+      },
+      "-createdAt -updatedAt"
+    );
 
     if (!result) {
       throw HttpError(404, "Not found");

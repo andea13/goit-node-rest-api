@@ -5,7 +5,7 @@ import {
   deleteContact,
   createContact,
   updateContact,
-  updateStatusContact,
+  updateContactStatus,
 } from "../controllers/contactsControllers.js";
 import { schemas } from "../models/contact.js";
 import validateBody from "../helpers/validateBody.js";
@@ -39,7 +39,7 @@ contactsRouter.patch(
   authenticate,
   isValiId,
   validateBody(schemas.updateFavoriteSchema),
-  updateStatusContact
+  updateContactStatus
 );
 
 export default contactsRouter;
