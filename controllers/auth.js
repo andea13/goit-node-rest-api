@@ -46,11 +46,12 @@ export const login = async (req, res, next) => {
     }
 
     const SECRET_KEY = process.env.SECRET_KEY;
+    const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN;
     const payload = {
       id: user._id,
     };
 
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: JWT_EXPIRES_IN });
 
     await User.findByIdAndUpdate(user._id, { token });
     res.status(200).json({
@@ -69,7 +70,7 @@ export const login = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
   const { _id } = req.user;
-  await User.findByIdAndUpdate({ _id, token: "" });
+  await User.findByIdAndUpdate(_id, { token: "" });
   res.status(204).json();
 };
 
