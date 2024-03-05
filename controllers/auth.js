@@ -3,9 +3,14 @@ import HttpError from "../helpers/HttpError.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import path from "path";
+import fs from "fs/promises";
 import gravatar from "gravatar";
 
 dotenv.config();
+
+const __dirname = import.meta.dirname;
+const avatarsDir = (__dirname, "../", "public", "avatars");
 
 export const register = async (req, res, next) => {
   const { email, password } = req.body;
@@ -104,5 +109,23 @@ export const updateSubscriptionStatus = async (req, res, next) => {
     res.json(result);
   } catch (error) {
     next(error);
+  }
+};
+
+export const updateAvatar = async (req, res, next) => {
+  const { _id } = req.user;
+  console.log("req.body", req.body);
+  console.log("req.file", req.file);
+  const { path: tempUpload, originalname } = req.file;
+  const resultUpload = path.join(avatarsDir, originalname);
+
+  try {
+    await fs.rename(tempUpload, resultUpload);
+    const avatarURL = path.join("/avatars", originalname);
+    await User.findByIdAndUpdate(_id, { avatarURL });
+    res.json({ avatarURL });
+    // res.json({ avatarURL: `/avatars/${originalname}` });
+  } catch (err) {
+    next(err);
   }
 };

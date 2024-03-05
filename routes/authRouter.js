@@ -7,8 +7,10 @@ import {
   getCurrentUser,
   logout,
   updateSubscriptionStatus,
+  updateAvatar,
 } from "../controllers/auth.js";
 import authenticate from "../middlewares/authenticate.js";
+import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 
@@ -39,5 +41,9 @@ router.patch(
   validateBody(schemas.updateSubscriptionStatusSchema),
   updateSubscriptionStatus
 );
+
+//updateAvatar
+
+router.patch("/avatars", authenticate, upload.single("avatar"), updateAvatar);
 
 export default router;
