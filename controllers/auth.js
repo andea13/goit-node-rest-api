@@ -10,7 +10,7 @@ import gravatar from "gravatar";
 dotenv.config();
 
 const __dirname = import.meta.dirname;
-const avatarsDir = (__dirname, "../", "public", "avatars");
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 export const register = async (req, res, next) => {
   const { email, password } = req.body;
@@ -120,6 +120,8 @@ export const updateAvatar = async (req, res, next) => {
   const resultUpload = path.join(avatarsDir, originalname);
 
   try {
+    console.log("tempUpload", tempUpload);
+    console.log("resultUpload", resultUpload);
     await fs.rename(tempUpload, resultUpload);
     const avatarURL = path.join("/avatars", originalname);
     await User.findByIdAndUpdate(_id, { avatarURL });
