@@ -3,6 +3,7 @@ import { Contact } from "../models/contact.js";
 
 const isValidOwner = async (req, res, next) => {
   const { id, contactId } = req.params;
+  const { _id: owner } = req.user;
 
   const contact = await Contact.findById(id || contactId);
   if (!contact) {
