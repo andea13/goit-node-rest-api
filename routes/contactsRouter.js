@@ -10,28 +10,15 @@ import {
 import { schemas } from "../models/contact.js";
 import validateBody from "../helpers/validateBody.js";
 import isValidId from "../middlewares/isValidID.js";
-import isValidOwner from "../middlewares/isValidOwner.js";
 import authenticate from "../middlewares/authenticate.js";
 
 const contactsRouter = express.Router();
 
 contactsRouter.get("/", authenticate, getAllContacts);
 
-contactsRouter.get(
-  "/:id",
-  authenticate,
-  isValidId,
-  isValidOwner,
-  getOneContact
-);
+contactsRouter.get("/:id", authenticate, isValidId, getOneContact);
 
-contactsRouter.delete(
-  "/:id",
-  authenticate,
-  isValidId,
-  isValidOwner,
-  deleteContact
-);
+contactsRouter.delete("/:id", authenticate, isValidId, deleteContact);
 
 contactsRouter.post(
   "/",
@@ -44,7 +31,6 @@ contactsRouter.put(
   "/:id",
   authenticate,
   isValidId,
-  isValidOwner,
   validateBody(schemas.updateContactSchema),
   updateContact
 );
@@ -53,7 +39,6 @@ contactsRouter.patch(
   "/:contactId/favorite",
   authenticate,
   isValidId,
-  isValidOwner,
   validateBody(schemas.updateFavoriteSchema),
   updateStatusContact
 );

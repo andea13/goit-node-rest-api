@@ -34,7 +34,12 @@ export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const result = await Contact.findById({ _id: id }, "-createdAt -updatedAt");
+    const { _id: owner } = req.user;
+
+    const result = await Contact.findOne(
+      { _id: id, owner },
+      "-createdAt -updatedAt"
+    );
     if (!result) {
       throw HttpError(404, "Not found");
     }
@@ -47,7 +52,9 @@ export const getOneContact = async (req, res, next) => {
 export const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await Contact.findByIdAndDelete(id);
+    const { _id: owner } = req.user;
+
+    const result = await Contact.findOneAndDelete({ _id: id, owner });
 
     if (!result) {
       throw HttpError(404, "Not found");
@@ -73,6 +80,7 @@ export const createContact = async (req, res, next) => {
 export const updateContact = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { _id: owner } = req.user;
 
     const { name, email, phone } = req.body;
 
@@ -80,8 +88,9 @@ export const updateContact = async (req, res, next) => {
       throw HttpError(400, "Body must have at least one field");
     }
 
-    const result = await Contact.findByIdAndUpdate(
-      id,
+    const result = await Contact.findOneAndUpdate(
+      { _id: id, owner },
+
       req.body,
       {
         new: true,
@@ -89,10 +98,11 @@ export const updateContact = async (req, res, next) => {
       "-createdAt -updatedAt"
     );
 
-    res.json(result);
     if (!result) {
       throw HttpError(404, "Not found");
     }
+
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -101,10 +111,10 @@ export const updateContact = async (req, res, next) => {
 export const updateStatusContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    console.log("contactId", contactId);
+    const { _id: owner } = req.user;
 
-    const result = await Contact.findByIdAndUpdate(
-      contactId,
+    const result = await Contact.findOneAndUpdate(
+      { _id: contactId, owner },
       req.body,
       {
         new: true,
