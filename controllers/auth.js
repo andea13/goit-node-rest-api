@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import path from "path";
 import fs from "fs/promises";
 import gravatar from "gravatar";
+import jimp from "jimp";
 
 dotenv.config();
 
@@ -114,19 +115,28 @@ export const updateSubscriptionStatus = async (req, res, next) => {
 
 export const updateAvatar = async (req, res, next) => {
   const { _id } = req.user;
-  console.log("req.body", req.body);
-  console.log("req.file", req.file);
+  // console.log("req.body", req.body);
+  // console.log("req.file", req.file);
+
   const { path: tempUpload, originalname } = req.file;
-  const resultUpload = path.join(avatarsDir, originalname);
+  const filename = `${_id}_${originalname}`;
+  const resizedAvatar = await jimp.read(tempUpload);
+  resizedAvatar.resize(250, 250).write(tempUpload);
+
+  const resultUpload = path.join(avatarsDir, filename);
 
   try {
     console.log("tempUpload", tempUpload);
     console.log("resultUpload", resultUpload);
     await fs.rename(tempUpload, resultUpload);
-    const avatarURL = path.join("/avatars", originalname);
+    const avatarURL = path.join("/avatars", filename);
     await User.findByIdAndUpdate(_id, { avatarURL });
+
+    if (!avatarURL) {
+      throw HttpError(401, "Not authorized");
+    }
+
     res.json({ avatarURL });
-    // res.json({ avatarURL: `/avatars/${originalname}` });
   } catch (err) {
     next(err);
   }
