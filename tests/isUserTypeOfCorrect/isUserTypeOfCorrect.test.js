@@ -8,7 +8,10 @@ import { checkUserType } from "./isUserTypeOfCorrect";
 //"andea13" - error - "user must be an object
 //1303 - error - "user must be an object"
 //[] - error - "user must be an object"
-//{} - true
+// user = {
+//       email: "andea13@gmail.com",
+//       subscription: "starter",
+//     } - true
 
 describe("test user type", () => {
   test("() - error user must be returned", () => {
@@ -36,8 +39,13 @@ describe("test user type", () => {
   test("array - error user must be an object", () => {
     expect(() => checkUserType([])).toThrow("user must be an object");
   });
-  test("{} - true", () => {
-    const result = checkUserType({});
+
+  test("object with email and subscription - true", () => {
+    const user = {
+      email: "andea13@gmail.com",
+      subscription: "starter",
+    };
+    const result = checkUserType(user);
     expect(result).toBe(true);
   });
 });
