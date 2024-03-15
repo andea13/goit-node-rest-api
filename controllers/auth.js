@@ -115,8 +115,6 @@ export const updateSubscriptionStatus = async (req, res, next) => {
 
 export const updateAvatar = async (req, res, next) => {
   const { _id } = req.user;
-  // console.log("req.body", req.body);
-  // console.log("req.file", req.file);
 
   const { path: tempUpload, originalname } = req.file;
   const filename = `${_id}_${originalname}`;
@@ -126,8 +124,6 @@ export const updateAvatar = async (req, res, next) => {
   const resultUpload = path.join(avatarsDir, filename);
 
   try {
-    console.log("tempUpload", tempUpload);
-    console.log("resultUpload", resultUpload);
     await fs.rename(tempUpload, resultUpload);
     const avatarURL = path.join("/avatars", filename);
     await User.findByIdAndUpdate(_id, { avatarURL });

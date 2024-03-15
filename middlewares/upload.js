@@ -4,7 +4,6 @@ import path from "path";
 const __dirname = import.meta.dirname;
 
 const tempDir = path.join(__dirname, "../", "tmp");
-console.log("tempDir", tempDir);
 
 const multerConfig = multer.diskStorage({
   destination: tempDir,
