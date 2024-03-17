@@ -1,15 +1,15 @@
 import request from "supertest";
-import { app } from "./app.js";
+import { app } from "../app.js";
 import mongoose from "mongoose";
 
 const { DB_HOST, PORT = 3000 } = process.env;
 
 describe("POST /api/users/login", () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     await mongoose.connect(DB_HOST);
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await mongoose.connection.close();
   });
 

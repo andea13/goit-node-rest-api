@@ -117,14 +117,17 @@ export const updateSubscriptionStatus = async (req, res, next) => {
 export const updateAvatar = async (req, res, next) => {
   const { _id } = req.user;
 
-  const { path: tempUpload, originalname } = req.file;
-  const filename = `${_id}_${originalname}`;
-  const resizedAvatar = await jimp.read(tempUpload);
-  resizedAvatar.resize(250, 250).write(tempUpload);
-
-  const resultUpload = path.join(avatarsDir, filename);
-
   try {
+    if (!req.file) {
+      throw HttpError(400, "Please upload the file");
+    }
+    const { path: tempUpload, originalname } = req.file;
+    const filename = `${_id}_${originalname}`;
+    const resizedAvatar = await jimp.read(tempUpload);
+    resizedAvatar.resize(250, 250).write(tempUpload);
+
+    const resultUpload = path.join(avatarsDir, filename);
+
     await fs.rename(tempUpload, resultUpload);
     const avatarURL = path.join("/avatars", filename);
     await User.findByIdAndUpdate(_id, { avatarURL });
