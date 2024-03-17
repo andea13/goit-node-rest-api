@@ -3,14 +3,17 @@ import HttpError from "../helpers/HttpError.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import path from "path";
 import fs from "fs/promises";
 import gravatar from "gravatar";
 import jimp from "jimp";
+import { fileURLToPath } from "url";
+import path, { dirname } from "path";
 
 dotenv.config();
 
-const __dirname = import.meta.dirname;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 export const register = async (req, res, next) => {
@@ -73,8 +76,6 @@ export const login = async (req, res, next) => {
         subscription: user.subscription,
       },
     });
-
-    const { id } = jwt.verify(token, SECRET_KEY);
   } catch (err) {
     next(err);
   }
