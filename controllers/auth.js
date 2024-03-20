@@ -1,6 +1,6 @@
 import { User } from "../models/user.js";
 import HttpError from "../helpers/HttpError.js";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import fs from "fs/promises";
@@ -26,7 +26,7 @@ export const register = async (req, res, next) => {
       return next(HttpError(409, "Email in use"));
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcryptjs.hash(password, 10);
     const avatarURL = gravatar.url(email);
 
     const newUser = await User.create({
@@ -55,7 +55,7 @@ export const login = async (req, res, next) => {
       throw HttpError(401, "Email or password is wrong");
     }
 
-    const comparePassword = await bcrypt.compare(password, user.password);
+    const comparePassword = await bcryptjs.compare(password, user.password);
     if (!comparePassword) {
       throw HttpError(401, "Email or password is wrong");
     }

@@ -9,7 +9,7 @@ import {
 } from "../controllers/contactsControllers.js";
 import { schemas } from "../models/contact.js";
 import validateBody from "../helpers/validateBody.js";
-import isValiId from "../middlewares/isValidID.js";
+import isValiId from "../middlewares/isValidId.js";
 import authenticate from "../middlewares/authenticate.js";
 
 const contactsRouter = express.Router();
