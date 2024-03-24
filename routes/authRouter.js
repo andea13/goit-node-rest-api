@@ -3,6 +3,8 @@ import validateBody from "../helpers/validateBody.js";
 import { schemas } from "../models/user.js";
 import {
   register,
+  verifyEmail,
+  resendVerificationEmail,
   login,
   getCurrentUser,
   logout,
@@ -19,6 +21,16 @@ router.post(
   "/register",
   validateBody(schemas.registrationUserSchema),
   register
+);
+
+//email verification
+
+router.get("/verify/:verificationToken", verifyEmail);
+
+router.post(
+  "/verify",
+  validateBody(schemas.checkIfEmailVerifiedSchema),
+  resendVerificationEmail
 );
 
 //signin
